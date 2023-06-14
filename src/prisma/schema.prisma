@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  email   String    @id
+  pwd     String
+  role_id User_Role @relation(fields: [role], references: [id])
+  role    Int
+}
+
+model User_Role {
+  id            Int              @id @default(autoincrement())
+  name          String
+  permission_id User_Permissions @relation(fields: [permission], references: [id])
+  permission    Int
+  users         User[]
+}
+
+model User_Permissions {
+  id         Int         @id @default(autoincrement())
+  adminPage  Boolean
+  editItems  Boolean
+  user_roles User_Role[]
+}
